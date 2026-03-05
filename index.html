@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>FabcConnect — Laser Cutting Time</title>
+        <link rel="stylesheet" href="css/style.css" />
+    </head>
+    <body>
+        <header>
+            <div class="hdr">
+                <a href="#" class="logo">
+                    <div class="logo-icon">⚡</div>
+                    <span class="logo-text">FabcConnect</span>
+                    <span class="logo-tag">Laser Time</span>
+                </a>
+                <nav>
+                    <a href="README.md" target="_blank">Equations &amp; Docs</a>
+                </nav>
+            </div>
+        </header>
+
+        <main>
+            <div class="page">
+                <!-- Hero -->
+                <section class="hero">
+                    <div class="hero-tag">G-Code Laser Analyser</div>
+                    <h1>
+                        Drop G-Code.
+                        <br />
+                        Get
+                        <span>Cutting Time.</span>
+                    </h1>
+                    <p>
+                        Instantly calculates laser job time from your G-code —
+                        no settings needed.
+                    </p>
+                </section>
+
+                <!-- Error -->
+                <div id="err" class="hidden"></div>
+
+                <!-- Upload -->
+                <div
+                    id="dropzone"
+                    role="button"
+                    tabindex="0"
+                    aria-label="Upload G-code file"
+                >
+                    <span class="drop-glyph">🔴</span>
+                    <div id="drop-label">
+                        Drop G-code here or click to browse
+                    </div>
+                    <div class="drop-formats">
+                        <span class="fmt">.NC</span>
+                        <span class="fmt">.GCODE</span>
+                        <span class="fmt">.NGC</span>
+                        <span class="fmt">.GC</span>
+                        <span class="fmt">.TAP</span>
+                        <span class="fmt">.G</span>
+                    </div>
+                    <div class="drop-note">
+                        LightBurn · LaserGRBL · RDWorks · Marlin · Grbl
+                    </div>
+                </div>
+
+                <input
+                    type="file"
+                    id="file-input"
+                    accept=".nc,.gcode,.gc,.ngc,.cnc,.tap,.g"
+                    style="display:none"
+                />
+
+                <!-- Results (hidden until file parsed) -->
+                <div id="results" class="hidden">
+                    <!-- Total time -->
+                    <div class="time-hero">
+                        <div class="eyebrow">
+                            ⏱ Total Estimated Cutting Time
+                        </div>
+                        <div class="big-time" id="res-total">—</div>
+                        <div class="filename" id="res-filename"></div>
+                    </div>
+
+                    <!-- Cut / Rapid / Pierce cards -->
+                    <div class="trio">
+                        <div class="trio-card cut">
+                            <div class="tc-label">
+                                <span>🔴</span>
+                                Laser On
+                            </div>
+                            <div class="tc-val" id="card-cut">—</div>
+                        </div>
+                        <div class="trio-card rapid">
+                            <div class="tc-label">
+                                <span>↗</span>
+                                Rapid Travel
+                            </div>
+                            <div class="tc-val" id="card-rapid">—</div>
+                        </div>
+                        <div class="trio-card pierce">
+                            <div class="tc-label">
+                                <span>⚡</span>
+                                Pierce Dwell
+                            </div>
+                            <div class="tc-val" id="card-pierce">—</div>
+                        </div>
+                    </div>
+
+                    <!-- Bar chart -->
+                    <!-- <div class="bars-card">
+                        <div class="bar-head">Time distribution</div>
+
+                        <div class="bar-row">
+                            <div class="bar-meta cut">
+                                <span class="name">🔴 Cutting (laser on)</span>
+                                <span class="pct" id="lbl-cut">—</span>
+                            </div>
+                            <div class="bar-track">
+                                <div class="bar-fill cut" id="bar-cut"></div>
+                            </div>
+                        </div>
+
+                        <div class="bar-row">
+                            <div class="bar-meta rapid">
+                                <span class="name">↗ Rapid travel</span>
+                                <span class="pct" id="lbl-rapid">—</span>
+                            </div>
+                            <div class="bar-track">
+                                <div
+                                    class="bar-fill rapid"
+                                    id="bar-rapid"
+                                ></div>
+                            </div>
+                        </div>
+
+                        <div class="bar-row">
+                            <div class="bar-meta pierce">
+                                <span class="name">⚡ Pierce dwell</span>
+                                <span class="pct" id="lbl-pierce">—</span>
+                            </div>
+                            <div class="bar-track">
+                                <div
+                                    class="bar-fill pierce"
+                                    id="bar-pierce"
+                                ></div>
+                            </div>
+                        </div> -->
+                    </div> -->
+
+                    <!-- Stats -->
+                    <!-- <div class="stats-card">
+                        <div class="stats-head">File statistics</div>
+                        <div class="stats-grid">
+                            <div>
+                                <div class="stat">
+                                    <span class="stat-k">Cut distance</span>
+                                    <span class="stat-v" id="st-cut-dist">
+                                        —
+                                    </span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-k">Rapid distance</span>
+                                    <span class="stat-v" id="st-rapid-dist">
+                                        —
+                                    </span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-k">Total travel</span>
+                                    <span class="stat-v" id="st-total-dist">
+                                        —
+                                    </span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-k">
+                                        Pierces / lead-ins
+                                    </span>
+                                    <span class="stat-v" id="st-pierces">
+                                        —
+                                    </span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-k">Pierce dwell</span>
+                                    <span class="stat-v" id="st-dwell">—</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-k">File size</span>
+                                    <span class="stat-v" id="st-filesize">
+                                        —
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="stat">
+                                    <span class="stat-k">Cutting moves</span>
+                                    <span class="stat-v" id="st-cut-moves">
+                                        —
+                                    </span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-k">
+                                        Arc moves (G2/G3)
+                                    </span>
+                                    <span class="stat-v" id="st-arc-moves">
+                                        —
+                                    </span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-k">Rapid moves (G0)</span>
+                                    <span class="stat-v" id="st-rapid-moves">
+                                        —
+                                    </span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-k">G-code lines</span>
+                                    <span class="stat-v" id="st-lines">—</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-k">Feed range</span>
+                                    <span class="stat-v" id="st-feed-range">
+                                        —
+                                    </span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-k">Max laser power</span>
+                                    <span class="stat-v" id="st-max-power">
+                                        —
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+-->
+                    <!--    <div 
+                            style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);
+                  display:flex;gap:20px;flex-wrap:wrap"
+                        >
+                            <span style="font-size:.75rem;color:var(--muted)">
+                                Units:
+                                <strong style="color:var(--text)" id="st-units">
+                                    —
+                                </strong>
+                            </span>
+                            <span style="font-size:.75rem;color:var(--muted)">
+                                Est. energy:
+                                <strong
+                                    style="color:var(--text)"
+                                    id="st-energy"
+                                >
+                                    —
+                                </strong>
+                            </span>
+                        </div>
+                    </div>
+
+                    <p class="note">
+                        Precision ±1–2% · Corner deceleration correction applied
+                        ·
+                        <a
+                            href="README.md"
+                            target="_blank"
+                            style="color:var(--blue)"
+                        >
+                            How it's calculated
+                        </a>
+                    </p>
+                </div>-->
+                <!-- /results -->
+           <!-- </div>
+        </main>
+
+        <footer>
+            FabcConnect Laser Time Calculator &nbsp;·&nbsp;
+            <a href="README.md" target="_blank">
+                Documentation &amp; Equations
+            </a>
+        </footer>
+      -->
+
+        <script type="module" src="js/app.js"></script>
+    </body>
+</html>

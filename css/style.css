@@ -1,0 +1,204 @@
+:root {
+    --bg: #ffffff;
+    --panel: #f8fafc;
+    --border: #e2e8f0;
+
+    --blue: #2563eb;
+    --blue-light: #dbeafe;
+
+    --text: #1e293b;
+    --muted: #64748b;
+
+    --radius: 10px;
+    --font: "IBM Plex Sans", system-ui;
+}
+
+/* ─────────── Reset ─────────── */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+}
+
+.page {
+    max-width: 760px;
+    margin: auto;
+    padding: 0 20px 80px;
+}
+
+/* ─────────── Header ─────────── */
+
+header {
+    border-bottom: 1px solid var(--border);
+    background: white;
+}
+
+.hdr {
+    max-width: 760px;
+    margin: auto;
+    padding: 0 20px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo {
+    font-weight: 700;
+    color: var(--blue);
+    font-size: 18px;
+}
+
+nav a {
+    text-decoration: none;
+    font-size: 14px;
+    color: var(--muted);
+}
+
+nav a:hover {
+    color: var(--blue);
+}
+
+/* ─────────── Hero ─────────── */
+
+.hero {
+    text-align: center;
+    padding: 60px 0 40px;
+}
+
+.hero h1 {
+    font-size: 2.5rem;
+    color: var(--blue);
+    margin-bottom: 10px;
+}
+
+.hero p {
+    color: var(--muted);
+    max-width: 420px;
+    margin: auto;
+}
+
+/* ─────────── Dropzone ─────────── */
+
+#dropzone {
+    border: 2px dashed var(--border);
+    border-radius: var(--radius);
+    padding: 60px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.2s;
+    background: white;
+}
+
+#dropzone:hover {
+    border-color: var(--blue);
+    background: var(--blue-light);
+}
+
+.drop-glyph {
+    font-size: 40px;
+    margin-bottom: 10px;
+}
+
+.drop-note {
+    font-size: 13px;
+    color: var(--muted);
+}
+
+/* ─────────── Results ─────────── */
+
+#results {
+    margin-top: 30px;
+}
+
+/* Time hero */
+
+.time-hero {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 30px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.big-time {
+    font-size: 3rem;
+    color: var(--blue);
+    font-weight: 700;
+}
+
+.filename {
+    font-size: 13px;
+    color: var(--muted);
+}
+
+/* Trio cards */
+
+.trio {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.trio-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px;
+}
+
+.tc-label {
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.tc-val {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--blue);
+}
+
+/* Stats */
+
+.stats-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+}
+
+.stat {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+}
+
+.stat:last-child {
+    border-bottom: none;
+}
+
+.stat-k {
+    color: var(--muted);
+}
+
+/* Footer */
+
+footer {
+    border-top: 1px solid var(--border);
+    text-align: center;
+    padding: 25px;
+    font-size: 13px;
+    color: var(--muted);
+}
