@@ -1,69 +1,118 @@
 <!doctype html>
 <html lang="en">
     <head>
+        <!-- =========================================================
+         BASIC PAGE META
+         ========================================================= -->
         <meta charset="UTF-8" />
+
+        <!-- Responsive scaling for mobile devices -->
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <!-- Page title shown in browser tab -->
         <title>FabcConnect — Laser Cutting Time</title>
+
+        <!-- Main stylesheet -->
         <link rel="stylesheet" href="css/style.css" />
     </head>
+
     <body>
+        <!-- =========================================================
+         HEADER / NAVBAR
+         Contains project logo and documentation link
+         ========================================================= -->
         <header>
             <div class="hdr">
+                <!-- Brand logo -->
                 <a href="#" class="logo">
-                    <div class="logo-icon">⚡</div>
+                    <!-- <div class="logo-icon">⚡</div> -->
                     <span class="logo-text">FabcConnect</span>
                     <span class="logo-tag">Laser Time</span>
                 </a>
+
+                <!-- Navigation -->
                 <nav>
-                    <a href="README.md" target="_blank">Equations &amp; Docs</a>
+                    <!-- Opens documentation in new tab -->
+                    <!-- <a href="README.md" target="_blank">Equations &amp; Docs</a> -->
                 </nav>
             </div>
         </header>
 
+        <!-- =========================================================
+         MAIN PAGE CONTENT
+         ========================================================= -->
         <main>
             <div class="page">
-                <!-- Hero -->
+                <!-- =================================================
+                 HERO SECTION
+                 Currently disabled but kept for future UI
+                 ================================================= -->
                 <section class="hero">
-                    <div class="hero-tag">G-Code Laser Analyser</div>
-                    <h1>
-                        Drop G-Code.
-                        <br />
-                        Get
-                        <span>Cutting Time.</span>
-                    </h1>
-                    <p>
-                        Instantly calculates laser job time from your G-code —
-                        no settings needed.
-                    </p>
-                </section>
+                    <!--
+                <div class="hero-tag">G-Code Laser Analyser</div>
 
-                <!-- Error -->
+                <h1>
+                    Drop G-Code.
+                    <br />
+                    Get <span>Cutting Time.</span>
+                </h1>
+
+                <p>
+                    Instantly calculates laser job time from your
+                    G-code — no settings needed.
+                </p>
+                --></section>
+
+                <!-- =================================================
+                 ERROR MESSAGE AREA
+                 Hidden until a parsing or upload error occurs
+                 ================================================= -->
                 <div id="err" class="hidden"></div>
 
-                <!-- Upload -->
+                <!-- =================================================
+                 FILE UPLOAD / DROP ZONE
+                 Allows drag & drop or click to upload G-code
+                 ================================================= -->
                 <div
                     id="dropzone"
                     role="button"
                     tabindex="0"
                     aria-label="Upload G-code file"
                 >
+                    <!-- Upload icon -->
                     <span class="drop-glyph">🔴</span>
+
+                    <!-- Upload instruction -->
                     <div id="drop-label">
                         Drop G-code here or click to browse
                     </div>
-                    <div class="drop-formats">
-                        <span class="fmt">.NC</span>
-                        <span class="fmt">.GCODE</span>
-                        <span class="fmt">.NGC</span>
-                        <span class="fmt">.GC</span>
-                        <span class="fmt">.TAP</span>
-                        <span class="fmt">.G</span>
-                    </div>
-                    <div class="drop-note">
-                        LightBurn · LaserGRBL · RDWorks · Marlin · Grbl
-                    </div>
-                </div>
 
+                    <!-- Supported file formats -->
+                    <div class="drop-formats">
+                        <!--
+                    <span class="fmt">.NC</span>
+                    -->
+
+                        <span class="fmt">.GCODE</span>
+
+                        <!--
+                    <span class="fmt">.NGC</span>
+                    <span class="fmt">.GC</span>
+                    <span class="fmt">.TAP</span>
+                    <span class="fmt">.G</span>
+                    --></div>
+
+                    <!-- Optional software compatibility hint -->
+                    <!--
+                <div class="drop-note">
+                    LightBurn · LaserGRBL · RDWorks · Marlin · Grbl
+                </div>
+                --></div>
+
+                <!-- =================================================
+                 HIDDEN FILE INPUT
+                 Triggered programmatically when dropzone clicked
+                 ================================================= -->
                 <input
                     type="file"
                     id="file-input"
@@ -71,212 +120,110 @@
                     style="display:none"
                 />
 
-                <!-- Results (hidden until file parsed) -->
+                <!-- =================================================
+                 RESULTS SECTION
+                 Hidden until a G-code file is successfully parsed
+                 ================================================= -->
                 <div id="results" class="hidden">
-                    <!-- Total time -->
+                    <!-- =============================================
+                     TOTAL ESTIMATED TIME DISPLAY
+                     ============================================= -->
                     <div class="time-hero">
+                        <!-- Label -->
                         <div class="eyebrow">
                             ⏱ Total Estimated Cutting Time
                         </div>
+
+                        <!-- Large time result -->
                         <div class="big-time" id="res-total">—</div>
+
+                        <!-- Uploaded filename -->
                         <div class="filename" id="res-filename"></div>
                     </div>
 
-                    <!-- Cut / Rapid / Pierce cards -->
-                    <div class="trio">
+                    <!-- =============================================
+                     SUMMARY CARDS
+                     Displays breakdown of time components
+                     ============================================= -->
+                    <!-- <div class="trio">
+                        Laser cutting time
                         <div class="trio-card cut">
                             <div class="tc-label">
                                 <span>🔴</span>
                                 Laser On
                             </div>
+
                             <div class="tc-val" id="card-cut">—</div>
                         </div>
+
                         <div class="trio-card rapid">
                             <div class="tc-label">
                                 <span>↗</span>
                                 Rapid Travel
                             </div>
+
                             <div class="tc-val" id="card-rapid">—</div>
                         </div>
+
                         <div class="trio-card pierce">
                             <div class="tc-label">
                                 <span>⚡</span>
                                 Pierce Dwell
                             </div>
+
                             <div class="tc-val" id="card-pierce">—</div>
                         </div>
-                    </div>
-
-                    <!-- Bar chart -->
-                    <!-- <div class="bars-card">
-                        <div class="bar-head">Time distribution</div>
-
-                        <div class="bar-row">
-                            <div class="bar-meta cut">
-                                <span class="name">🔴 Cutting (laser on)</span>
-                                <span class="pct" id="lbl-cut">—</span>
-                            </div>
-                            <div class="bar-track">
-                                <div class="bar-fill cut" id="bar-cut"></div>
-                            </div>
-                        </div>
-
-                        <div class="bar-row">
-                            <div class="bar-meta rapid">
-                                <span class="name">↗ Rapid travel</span>
-                                <span class="pct" id="lbl-rapid">—</span>
-                            </div>
-                            <div class="bar-track">
-                                <div
-                                    class="bar-fill rapid"
-                                    id="bar-rapid"
-                                ></div>
-                            </div>
-                        </div>
-
-                        <div class="bar-row">
-                            <div class="bar-meta pierce">
-                                <span class="name">⚡ Pierce dwell</span>
-                                <span class="pct" id="lbl-pierce">—</span>
-                            </div>
-                            <div class="bar-track">
-                                <div
-                                    class="bar-fill pierce"
-                                    id="bar-pierce"
-                                ></div>
-                            </div>
-                        </div> -->
                     </div> -->
 
-                    <!-- Stats -->
-                    <!-- <div class="stats-card">
-                        <div class="stats-head">File statistics</div>
-                        <div class="stats-grid">
-                            <div>
-                                <div class="stat">
-                                    <span class="stat-k">Cut distance</span>
-                                    <span class="stat-v" id="st-cut-dist">
-                                        —
-                                    </span>
-                                </div>
-                                <div class="stat">
-                                    <span class="stat-k">Rapid distance</span>
-                                    <span class="stat-v" id="st-rapid-dist">
-                                        —
-                                    </span>
-                                </div>
-                                <div class="stat">
-                                    <span class="stat-k">Total travel</span>
-                                    <span class="stat-v" id="st-total-dist">
-                                        —
-                                    </span>
-                                </div>
-                                <div class="stat">
-                                    <span class="stat-k">
-                                        Pierces / lead-ins
-                                    </span>
-                                    <span class="stat-v" id="st-pierces">
-                                        —
-                                    </span>
-                                </div>
-                                <div class="stat">
-                                    <span class="stat-k">Pierce dwell</span>
-                                    <span class="stat-v" id="st-dwell">—</span>
-                                </div>
-                                <div class="stat">
-                                    <span class="stat-k">File size</span>
-                                    <span class="stat-v" id="st-filesize">
-                                        —
-                                    </span>
-                                </div>
-                            </div>
+                    <!-- =================================================
+                     TIME DISTRIBUTION CHART (DISABLED)
+                     Visual percentage bars for cut / rapid / pierce
+                     ================================================= -->
 
-                            <div>
-                                <div class="stat">
-                                    <span class="stat-k">Cutting moves</span>
-                                    <span class="stat-v" id="st-cut-moves">
-                                        —
-                                    </span>
-                                </div>
-                                <div class="stat">
-                                    <span class="stat-k">
-                                        Arc moves (G2/G3)
-                                    </span>
-                                    <span class="stat-v" id="st-arc-moves">
-                                        —
-                                    </span>
-                                </div>
-                                <div class="stat">
-                                    <span class="stat-k">Rapid moves (G0)</span>
-                                    <span class="stat-v" id="st-rapid-moves">
-                                        —
-                                    </span>
-                                </div>
-                                <div class="stat">
-                                    <span class="stat-k">G-code lines</span>
-                                    <span class="stat-v" id="st-lines">—</span>
-                                </div>
-                                <div class="stat">
-                                    <span class="stat-k">Feed range</span>
-                                    <span class="stat-v" id="st-feed-range">
-                                        —
-                                    </span>
-                                </div>
-                                <div class="stat">
-                                    <span class="stat-k">Max laser power</span>
-                                    <span class="stat-v" id="st-max-power">
-                                        —
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
--->
-                    <!--    <div 
-                            style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);
-                  display:flex;gap:20px;flex-wrap:wrap"
-                        >
-                            <span style="font-size:.75rem;color:var(--muted)">
-                                Units:
-                                <strong style="color:var(--text)" id="st-units">
-                                    —
-                                </strong>
-                            </span>
-                            <span style="font-size:.75rem;color:var(--muted)">
-                                Est. energy:
-                                <strong
-                                    style="color:var(--text)"
-                                    id="st-energy"
-                                >
-                                    —
-                                </strong>
-                            </span>
-                        </div>
-                    </div>
+                    <!--
+                Bar chart code removed temporarily.
+                Keep here for future visualization feature.
+                -->
 
-                    <p class="note">
-                        Precision ±1–2% · Corner deceleration correction applied
-                        ·
-                        <a
-                            href="README.md"
-                            target="_blank"
-                            style="color:var(--blue)"
-                        >
-                            How it's calculated
-                        </a>
-                    </p>
-                </div>-->
-                <!-- /results -->
-           <!-- </div>
+                    <!-- =================================================
+                     ADVANCED FILE STATISTICS (DISABLED)
+                     Shows geometry and motion analysis
+                     ================================================= -->
+
+                    <!--
+                Statistics panel disabled for minimal UI version.
+                Contains:
+                    - Distance metrics
+                    - Move counts
+                    - Feed ranges
+                    - Laser power
+                    - Energy estimation
+                --></div>
+                <!-- End Results Section -->
+            </div>
         </main>
 
-        <footer>
-            FabcConnect Laser Time Calculator &nbsp;·&nbsp;
-            <a href="README.md" target="_blank">
-                Documentation &amp; Equations
-            </a>
-        </footer>
-      -->
+        <!-- =========================================================
+         FOOTER (CURRENTLY DISABLED)
+         ========================================================= -->
 
+        <!--
+    <footer>
+        FabcConnect Laser Time Calculator ·
+        <a href="README.md" target="_blank">
+            Documentation & Equations
+        </a>
+    </footer>
+    -->
+
+        <!-- =========================================================
+         MAIN JAVASCRIPT MODULE
+         Handles:
+            - File upload
+            - G-code parsing
+            - Time calculation
+            - UI updates
+         ========================================================= -->
         <script type="module" src="js/app.js"></script>
     </body>
 </html>
