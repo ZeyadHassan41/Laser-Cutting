@@ -2,7 +2,7 @@
 
 **Version:** 2.0  
 **Precision:** ±1–2%  
-**Input:** Any G-code file (`.nc`, `.gcode`, `.ngc`, `.gc`, `.tap`, `.g`)  
+**Input:** Any G-code file 
 **Output:** Laser cutting time with full breakdown
 
 ---
